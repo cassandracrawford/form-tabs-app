@@ -4,53 +4,25 @@ import { Pressable, StyleSheet, Text, View, TextInput, Alert } from 'react-nativ
 import { useRouter } from 'expo-router';
 import credentials from '../assets/credentials.json';
 
-export default function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [usernameError, setUsernameError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
+type LoginProps = {
+  username: string;
+  password: string;
+  setUsername: (text: string) => void;
+  setPassword: (text: string) => void;
+  usernameError?: string;
+  passwordError?: string;
+  onLogin: () => void;
+};
 
-  const router = useRouter();
-
-  const validateForm = () => {
-    let isValid = true;
-
-    if (username.length < 5) {
-      setUsernameError('Username must be at least 5 character long.');
-      isValid = false;
-    } else {
-      setUsernameError('');
-    }
-
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
-    if (!passwordRegex.test(password)) {
-      setPasswordError('Must be 8+ chars with a-z, A-Z, 0-9 & symbol.');
-      isValid = false;
-    } else {
-      setPasswordError('');
-    }
-
-    return isValid;
-  };
-
-  const handleLogin = () => {
-    if (!validateForm()) return;
-
-    const user = credentials.users.find((u) => u.username === username);
-
-    if (!user) {
-      Alert.alert('Login Failed', 'Username not found.');
-      return;
-    }
-
-    if (user.password !== password) {
-      Alert.alert('Login Failed', 'Incorrect password.');
-      return;
-    }
-
-    Alert.alert('Login Success', `Welcome, ${username}!`);
-    router.push('/home');
-  };
+export default function Login({
+  username,
+  password,
+  setUsername,
+  setPassword,
+  usernameError,
+  passwordError,
+  onLogin,
+}: LoginProps){
 
   return (
     <View style={styles.container}>
@@ -71,7 +43,7 @@ export default function Login() {
         secureTextEntry
       />
       {passwordError ? <Text>{passwordError}</Text> : null}
-      <Pressable style={styles.button} onPress={handleLogin}>
+      <Pressable style={styles.button} onPress={onLogin}>
         <Text style={{ color: '#fff' }}>Sign in</Text>
       </Pressable>
     </View>
