@@ -4,8 +4,10 @@
     "slug": "form-tabs-app",
     "version": "1.0.0",
     "orientation": "portrait",
+    "plugins": [["expo-router"]],
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": "form-tabs-app",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
