@@ -1,55 +1,80 @@
 import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Pressable, StyleSheet, Text, View, TextInput } from 'react-native';
+import { Pressable, StyleSheet, Text, View, TextInput, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
+import credentials from '../assets/credentials.json';
 
 export default function Login() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [usernameError, setUsernameError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
-1
-    const validateForm = () => {
-        let isValid = true;
-        
-        // username must be at least 5 characters long
-        if (username.length < 5) {
-            setUsernameError('Username must be at least 5 character long.');
-            isValid = false;
-        } else {
-            setUsernameError('');
-        }
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
-        // password must be at least 8 characters long
-        // password must include at least one uppercase letter, one lowercase letter, one number and one special character
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+  const router = useRouter();
 
-        if (!passwordRegex.test(password)) {
-            setPasswordError('Must be 8+ chars with a-z, A-Z, 0-9 & symbol.');
-            isValid = false;
-        } else {
-            setPasswordError('');
-        }
-        return isValid;
-    };
+  const validateForm = () => {
+    let isValid = true;
 
-    const handleLogin = () => {
-        if (validateForm()) {
-            console.log('Login successful');
-        }
-    };
+    if (username.length < 5) {
+      setUsernameError('Username must be at least 5 character long.');
+      isValid = false;
+    } else {
+      setUsernameError('');
+    }
 
-    return (
-        <View style={styles.container}>
-            <StatusBar hidden={true} />
-            <Text style={styles.title}>Login to your account.</Text>
-            <TextInput placeholder="Username" value={username} onChangeText={setUsername} style={styles.input} />
-            {usernameError ? <Text>{usernameError}</Text> : null}
-            <TextInput placeholder="Password" value={password} onChangeText={setPassword}style={styles.input} secureTextEntry/>
-            {passwordError ? <Text>{passwordError}</Text> : null}
-            <Pressable style={styles.button} onPress={handleLogin}>
-            <Text>Sign in</Text>
-            </Pressable>
-        </View>
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setPasswordError('Must be 8+ chars with a-z, A-Z, 0-9 & symbol.');
+      isValid = false;
+    } else {
+      setPasswordError('');
+    }
+
+    return isValid;
+  };
+
+  const handleLogin = () => {
+    if (!validateForm()) return;
+
+    const user = credentials.users.find((u) => u.username === username);
+
+    if (!user) {
+      Alert.alert('Login Failed', 'Username not found.');
+      return;
+    }
+
+    if (user.password !== password) {
+      Alert.alert('Login Failed', 'Incorrect password.');
+      return;
+    }
+
+    Alert.alert('Login Success', `Welcome, ${username}!`);
+    router.push('/home');
+  };
+
+  return (
+    <View style={styles.container}>
+      <StatusBar hidden={true} />
+      <Text style={styles.title}>Login to your account.</Text>
+      <TextInput
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
+        style={styles.input}
+      />
+      {usernameError ? <Text>{usernameError}</Text> : null}
+      <TextInput
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        style={styles.input}
+        secureTextEntry
+      />
+      {passwordError ? <Text>{passwordError}</Text> : null}
+      <Pressable style={styles.button} onPress={handleLogin}>
+        <Text style={{ color: '#fff' }}>Sign in</Text>
+      </Pressable>
+    </View>
   );
 }
 
@@ -79,5 +104,5 @@ const styles = StyleSheet.create({
     marginTop: 10,
     width: '50%',
     alignItems: 'center',
-  }
+  },
 });
