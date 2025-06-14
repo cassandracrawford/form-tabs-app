@@ -1,8 +1,5 @@
-import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, Text, View, TextInput, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
-import credentials from '../assets/credentials.json';
 
 type LoginProps = {
   username: string;
@@ -11,6 +8,8 @@ type LoginProps = {
   setPassword: (text: string) => void;
   usernameError?: string;
   passwordError?: string;
+  setUsernameError: (text: string) => void;
+  setPasswordError: (text: string) => void; 
   onLogin: () => void;
 };
 
@@ -21,39 +20,67 @@ export default function Login({
   setPassword,
   usernameError,
   passwordError,
+  setUsernameError,
+  setPasswordError,
   onLogin,
 }: LoginProps){
+
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
       <Text style={{...styles.title, fontSize: 32}}>Sign in</Text>
-      <Text style={{...styles.title, fontSize: 14, letterSpacing: 4, marginBottom: 40}}>your account</Text>
+      <Text style={{...styles.title, fontSize: 14, letterSpacing: 4, marginBottom: 20}}>your account</Text>
       <TextInput
         placeholder="Username"
         placeholderTextColor = 'white'
         value={username}
-        onChangeText={setUsername}
+        onChangeText={(text) => {
+          setUsername(text);
+          if (text.length >= 5) {
+          setUsernameError('');
+          }
+        }}
         style={styles.input}
       />
-      {usernameError ? <Text style={{color: 'white'}}>{usernameError}</Text> : null}
+      {usernameError ? <Text style={styles.errorMessage}>{usernameError}</Text> : null}
       <TextInput
         placeholder="Password"
         placeholderTextColor = 'white'
         value={password}
-        onChangeText={setPassword}
+        onChangeText={(text) => {
+          setPassword(text);
+          if (passwordRegex.test(text)) {
+          setPasswordError('');
+          }
+        }}
         style={styles.input}
         secureTextEntry
       />
       {passwordError ? <Text style={styles.errorMessage}>{passwordError}</Text> : null}
-      <Text style={{color: 'white'}}>Forgot Password?</Text>
+      <Text style={{color: '#F8C0D7', alignSelf: 'flex-end', paddingHorizontal: '10%', marginTop:4}}>Forgot Password?</Text>
       <Pressable style={({ pressed }) => [
         styles.button,
-        pressed && { backgroundColor: pressed ? '#f2f2f2' : 'white' },
+        pressed && {
+          backgroundColor: '#F8C0D7',
+        },
         ]} onPress={onLogin}>
-        <Text style={styles.buttonText}>Sign in</Text>
+        {({ pressed }) => (
+    <Text
+      style={[
+        styles.buttonText,
+        pressed && {
+          color: 'white',     
+          fontWeight: 900,    
+        },
+      ]}
+    >
+      Sign in
+    </Text>
+  )}
       </Pressable>
-      <Text style={{color: 'white'}}>Do you have an account? Sign up!</Text>
+      <Text style={{color: '#F8C0D7', marginTop: 8}}>Don't have an account? Sign up</Text>
     </View>
   );
 }
@@ -69,14 +96,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
     textTransform: 'uppercase',
-    margin: 2,
+    alignSelf: 'flex-start',
+    paddingHorizontal: '10%',
   },
   input: {
     padding: 10,
     borderColor: 'white',
     borderBottomWidth: 1,
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 5,
     width: '80%',
     color: 'white',
   },
@@ -84,17 +112,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 10,
     borderRadius: 20,
+    borderWidth: 2,
+    borderColor: 'white',
     marginTop: 30,
     width: '50%',
     alignItems: 'center',
   },
   buttonText: {
-    color: '#E94C89',
+    color: '#E64D8C',
     fontWeight: 900,
     textTransform: 'uppercase',
     letterSpacing: 2,
   },
   errorMessage: {
     color: 'white',
+    alignSelf: 'flex-start',
+    paddingHorizontal: '10%',
   },
 });
