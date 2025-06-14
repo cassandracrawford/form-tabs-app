@@ -24,7 +24,7 @@ export default function App() {
   
       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
       if (!passwordRegex.test(password)) {
-        setPasswordError('Must be 8+ chars with a-z, A-Z, 0-9 & symbol.');
+        setPasswordError('Password must be at least 8 characters, include letters, numbers & a symbol.');
         isValid = false;
       } else {
         setPasswordError('');
@@ -61,6 +61,8 @@ export default function App() {
         setPassword={setPassword}
         usernameError={usernameError}
         passwordError={passwordError}
+        setUsernameError={setUsernameError}
+        setPasswordError={setPasswordError} 
         onLogin={handleLogin}
     />
     </View>
