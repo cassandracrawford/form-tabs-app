@@ -6,9 +6,10 @@ export default function Calgary() {
   return (
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scroll}>
-        <Text style={styles.title}>Calgary</Text>
-        <Image source={require('../../assets/calgary.jpg')} style={styles.image} />
-        <CityInfo text="Calgary is known as the 'Blue Sky City'. It hosts the famous Stampede and offers easy access to the Rockies." />
+      <Text style={styles.welcome}>Welcome to My New App</Text>
+      <Text style={styles.title}>Calgary</Text>
+      <Image source={require('../../assets/calgary.jpg')} style={styles.image} />
+      <CityInfo text="Calgary is known as the 'Blue Sky City'. It hosts the famous Stampede and offers easy access to the Rockies." />
       </ScrollView>
       <View style={styles.linkContainer}>
         <CityLink url="https://www.calgary.ca/home.html" />
@@ -32,6 +33,15 @@ export default function Calgary() {
     color: '#B71C1C', 
     marginBottom: 20,
   },
+   welcome: {
+   fontSize: 20,
+   fontWeight: '500',
+   fontFamily: 'serif', 
+   fontStyle: 'italic',
+   color: '#880E4F',
+   textAlign: 'center',
+   marginBottom: 12,
+ },
   image: {
     width: '100%',
     height: 220,
