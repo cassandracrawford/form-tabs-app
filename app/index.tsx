@@ -49,7 +49,8 @@ export default function App() {
       }
   
       Alert.alert('Login Success', `Welcome, ${username}!`);
-      router.push('/(tabs)/calgary');
+      router.replace('/(tabs)/calgary');
+
     };
 
   return (
